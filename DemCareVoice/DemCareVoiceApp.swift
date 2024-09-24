@@ -6,27 +6,17 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct DemCareVoiceApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    // Initialize the APIClient as a StateObject to ensure it's managed properly
+    @StateObject private var apiClient = APIClient.shared
 
     var body: some Scene {
         WindowGroup {
+            // Provide the APIClient to the ContentView using the environmentObject modifier
             ContentView()
+                .environmentObject(apiClient)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
